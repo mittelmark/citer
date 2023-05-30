@@ -2,7 +2,7 @@
 #' ---
 #' title: Tcl application and package dealing with bibtex references.
 #' author: Detlef Groth, University of Potsdam, Germany
-#' date: <230529.1250>
+#' date: <230530.1344>
 #' tcl:
 #'     eval: 1
 #' bibliography: assets/literature.bib
@@ -53,7 +53,7 @@
 
 package require Tcl
 package require bibtex
-package provide citer 0.1
+package provide citer 0.1.0
 
 namespace eval citer {
     variable style 
