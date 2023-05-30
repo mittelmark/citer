@@ -2,7 +2,7 @@
 #' ---
 #' title: Tcl application and package dealing with bibtex references.
 #' author: Detlef Groth, University of Potsdam, Germany
-#' date: <230530.1416>
+#' date: <230530.1427>
 #' tcl:
 #'     eval: 1
 #' bibliography: assets/literature.bib
@@ -19,7 +19,7 @@
 #
 #  Copyright (c) 2023 Dr. Detlef Groth.
 # 
-#  License:      MIT
+#  License:      BSD3
 # 
 ##############################################################################
 #' 
@@ -443,13 +443,11 @@ if {[info exists argv0] && $argv0 eq [info script] && [regexp citer $argv0]} {
 #' 
 #' ## AUTHOR
 #' 
-#' Detlef Groth, Caputh-Schwielowsee, Germany, detlef(_at_)dgroth(_dot_).de
+#' Detlef Groth, University of Potsdam, Germany, dgroth(_at_)uni-potsdam(_dot_).de
 #' 
 #' ## LICENSE
 #' 
 #' ```
-#' MIT License
-#' 
 #' BSD 3-Clause License
 #'
 #' Copyright (c) 2023, Detlef Groth, University of Potsdam
