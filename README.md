@@ -6,7 +6,7 @@ This is a Tcl package and a simpel standalone application to work with Bibtex
 files. 
 
 The documentation of the package and the application can be seen here:
-[citer/citer.html]([citer](https://htmlpreview.github.io/?https://github.com/mittelmark/citer/blob/master/citer/citer.html).
+[citer.html](https://htmlpreview.github.io/?https://github.com/mittelmark/citer/blob/master/citer/citer.html).
 
 The package was mainly developed to be embedded within the Pantcl document
 processor to allow reporting writing as well with references. An example can
