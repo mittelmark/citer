@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="mkdoc" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: ; script-src 'self' 'nonce-d717cfb5d902616b7024920ae20346a8494f7832145c90e0' ; style-src 'self' 'unsafe-inline'" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="Tcl application and package dealing with bibtex references.">
+  <meta name="author" content="Detlef Groth, University of Potsdam, Germany">
+  <title>Tcl application and package dealing with bibtex references.</title>
+<link rel='stylesheet' href='mini.css' type='text/css'>
+</head>
+<body>
+
+<h1 class="title">Tcl application and package dealing with bibtex references.</h1>
+<h2 class="author">Detlef Groth, University of Potsdam, Germany</h2>
+<h2 class="date"><230529.1250></h2>
+<h2>NAME</h2>
+
+<p><em>citer.tcl</em> - application and Tcl package to display Bibtex referencess</p>
+
+<h2>SYNOPSIS - CLI</h2>
+
+<pre class='code'><code>### show some bibtex references
+citer.tcl BIBTEXFILE KEY1 ?KEY2 ...?
+### show all ids in the bibtex file
+citer.tcl BIBTEXFILE  </code></pre>
+
+<h2>SYNOPSIS - package</h2>
+
+<pre class='code'><code>package require citer
+citer::bibliography ?BIBTEXFILE?
+citer::cite KEYLIST
+citer::getKeys ?BIBTEXFILE?
+citer::getReference BIBTEXFILE KEY1 ?KEY2 ...?
+citer::reset
+citer::style INLINE BIBLIO</code></pre>
+
+<h2>METHODS</h2>
+
+<p><strong>citer::bibliography</strong> <em>?filename format?</em></p>
+
+<blockquote>
+<p>Returns the citation list. If filename is not given the 
+  default filename <em>references.bib</em> is assumed, if the function
+  bibliography is called before any cite functions are called simply
+  the default bibliography file is configured.</p>
+</blockquote>
+
+<p><strong>citer::cite</strong> <em>keylist</em></p>
+
+<blockquote>
+<p>Adds the given keys to the citation list.</p>
+</blockquote>
+
+<p><strong>citer::getKeys</strong> <em>BIBTEXFILE</em></p>
+
+<blockquote>
+<p>Returns all available keys for the given file.</p>
+</blockquote>
+
+<p><strong>citer::getReference</strong> ?BIBTEXFILE KEYLIST?</p>
+
+<blockquote>
+<p>Returns formatted sequences for the given file and keys.</p>
+</blockquote>
+
+<p><strong>citer::refstyle</strong> <em>-type1 formatsting ?-type2 formatstring?</em></p>
+
+<blockquote>
+<p>Create the appropriate format strings for the different reference types
+  like journal, book, inproceedings, default etc.</p>
+
+<p>Arguments:</p>
+
+<ul>
+<li><em>-article FORMATSTRING</em></li>
+<li><em>-book FORMATSTRING</em>
+</li></ul>
+
+<p>Example:</p>
+
+<pre class='code tclinn'><code class='tclinn'>citer::refstyle \
+  -article &quot;{author} ({year}). {title}. _{journal}_ {volume}: {pages}&quot; \
+  -incollection &quot;{author} ({year}). {title}. In: _{booktitle}_, {publisher}. {volume}: {pages}.&quot; \
+  -default &quot;{author} ({year}). {title}. {publisher}.&quot; 
+citer::getReference assets/literature.bib Groth2013
+</code></pre>
+
+<pre class='code tclout'><code class='tclout'>Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.</code></pre>
+</blockquote>
+
+<p><strong>citer::reset</strong> inline biblio</p>
+
+<blockquote>
+<p>Clears the list of previously given references.
+  Should be given only for debugging usually.</p>
+
+<p>Arguments: None</p>
+</blockquote>
+
+<p><strong>citer::style</strong> <em>inline biblio</em></p>
+
+<blockquote>
+<p>Sets the style for inline citations and for the bibliography at the end.</p>
+
+<p>Arguments: - <em>inline</em> - either numeric or abbrev, default: abbrev
+             - <em>biblio</em> - the style of the literature list, currently only APA is supported, which is the default</p>
+</blockquote>
+
+<h2>EXAMPLES</h2>
+
+<p>First an example on how to use this package directly within Tcl applications.</p>
+
+<pre class='code tclinn'><code class='tclinn'>citer::bibliography assets/literature.bib
+citer::cite Groth2013
+citer::cite Sievers2011
+citer::cite wiki:blast
+puts &quot;####### Tcllist like ###########&quot;
+foreach item [citer::bibliography tcl] {
+   puts &quot;[lindex $item 0] ---- [lindex $item 1]&quot;
+}
+puts &quot;####### Markdown like ###########&quot;
+foreach item [citer::bibliography] {
+   puts &quot;* __[lindex $item 0]__ - [lindex $item 1]&quot;
+}
+citer::reset ;# remove all keys from citation list
+</code></pre>
+
+<pre class='code tclout'><code class='tclout'>####### Tcllist like ###########
+Groth2013 ---- Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.
+Sievers2011 ---- Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. _Mol. Syst. Biol._ 7: 539
+wiki:blast ---- Wikipedia --- BLAST (biotechnology) (2020). Wikipedia, The Free Encyclopedia. https://en.wikipedia.org/wiki/BLAST_(biotechnology) [Online; accessed 02-May-2020]
+####### Markdown like ###########
+* __Groth2013__ - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.
+* __Sievers2011__ - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. _Mol. Syst. Biol._ 7: 539
+* __wiki:blast__ - Wikipedia --- BLAST (biotechnology) (2020). Wikipedia, The Free Encyclopedia. https://en.wikipedia.org/wiki/BLAST_(biotechnology) [Online; accessed 02-May-2020]</code></pre><p>Now an example with inline text:</p>
+
+<p>Here an example with a few citations. The package should be usually used within
+Markdown documents processed with the <a href="https://github.com/pantcl">pantcl</a> document processor.</p>
+
+<pre class='code tclinn'><code class='tclinn'>citer::style numeric APA
+</code></pre>
+
+<p>Here some example input:</p>
+
+<pre class='code'><code>This filter as well supports basic reference management using Bibtex files.
+Citations should be embedded like this: `tcl citer::cite Sievers2011` where 
+_Sievers2011_ is a Bibtex key in your Bibtex file. Here is an other citation 
+`tcl cite Yachdav2016`. And here is a PCA article from my self `tcl cite Groth2013`. 
+And now a cite command with two citations.
+The Wilcox comparison of two samples and the Spearman correlation are 
+non-parametric methods `tcl cite Wilcoxon1945 Spearman1904`.
+
+In case we cite the same paper again the numbers should not be updated.
+So let's cite Sivers2011 `tcl cite Sievers2011` again which should produce
+again a number 1 citation. Instead of citer the approach embedding references
+using the at sign should work as well. Here is an example for 
+Sievers et. al [@Sievers2011].</code></pre>
+
+<p>And here the output:</p>
+
+<p>This filter as well supports basic reference management using Bibtex files.
+Citations should be embedded like this: [1] where 
+<em>Sievers2011</em> is a Bibtex key in your Bibtex file. Here is an other citation 
+[2]. And here is a PCA article from my self [3]. 
+And now a cite command with two citations.
+The Wilcox comparison of two samples and the Spearman correlation are 
+non-parametric methods [4,5].</p>
+
+<p>In case we cite the same paper again the numbers should not be updated.
+So let's cite Sivers2011 [1] again which should produce
+again a number 1 citation. Instead of citer the approach embedding references
+using the at sign should work as well. Here is an example for 
+Sievers et. al [1].</p>
+
+<p>The citations list can be then finally displayed like this:</p>
+
+<pre class='code tclinn'><code class='tclinn'>bibliography assets/literature.bib
+</code></pre>
+
+<ul>
+<li><strong>[1]</strong> - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. <em>Mol. Syst. Biol.</em> 7: 539</li>
+<li><strong>[2]</strong> - Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. <em>Bioinformatics</em> 32: 3501</li>
+<li><strong>[3]</strong> - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: <em>Computational Toxicology</em>, Humana Press. 930: 527-547.</li>
+<li><strong>[4]</strong> - Wilcoxon, F. (1945). Individual comparisons by ranking methods. <em>Biom. Bull.</em> 1: 80-93</li>
+<li><strong>[5]</strong> - Spearman, C. (1904). The proof and measurement of association between two things. <em>The American Journal of Psychology</em> 15: 72-101
+
+
+</li></ul>
+
+<p>There is currently only an other style available, 'abbrev':
+to use the style within the same document we have to call the bibstyle
+command again.</p>
+
+<pre class='code tclinn'><code class='tclinn'>bibstyle abbrev
+</code></pre>
+
+<p>Let's now write just the same text again.
+This filter as well supports basic reference management using Bibtex files.
+Citations should be embedded like this: [Sievers2011] where <em>Sievers2011</em> is a
+Bibtex key in your Bibtex file. Here is an other citation [Yachdav2016].
+And here is a PCA article from my self [Groth2013].</p>
+
+<p>In case we cite the same paper again the numbers should not be updated.
+So let's cite Sivers2011 [Sievers2011] again which should produce
+again a number 1 citation.</p>
+
+<p>The citations list can be then finally displayed like this:</p>
+
+<pre class='code tclinn'><code class='tclinn'>bibliography assets/literature.bib
+</code></pre>
+
+<ul>
+<li><strong>[Groth2013]</strong> - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: <em>Computational Toxicology</em>, Humana Press. 930: 527-547.</li>
+<li><strong>[Sievers2011]</strong> - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. <em>Mol. Syst. Biol.</em> 7: 539</li>
+<li><strong>[Spearman1904]</strong> - Spearman, C. (1904). The proof and measurement of association between two things. <em>The American Journal of Psychology</em> 15: 72-101</li>
+<li><strong>[Wilcoxon1945]</strong> - Wilcoxon, F. (1945). Individual comparisons by ranking methods. <em>Biom. Bull.</em> 1: 80-93</li>
+<li><strong>[Yachdav2016]</strong> - Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. <em>Bioinformatics</em> 32: 3501
+
+
+
+</li></ul>
+
+<h2>TODO</h2>
+
+<ul>
+<li>test format strings like &quot;<code>{author} ({year}). {title}. {volume}:{number} {pages}.</code>&quot; for different categories, article, book, inprooceedings, etc.
+</li></ul>
+
+<h2>AUTHOR</h2>
+
+<p>Detlef Groth, Caputh-Schwielowsee, Germany, detlef(<em>at</em>)dgroth(<em>dot</em>).de</p>
+
+<h2>LICENSE</h2>
+
+<pre class='code'><code>MIT License
+
+Copyright (c) 2023 Detlef Groth, Caputh-Schwielowsee, Germany
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</code></pre>
+
+</body>
+</html>
