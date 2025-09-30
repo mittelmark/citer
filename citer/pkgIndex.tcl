@@ -1,1 +1,1 @@
-package ifneeded citer 0.1.1 [list source [file join $dir citer.tcl]]
+package ifneeded citer 0.2.0 [list source [file join $dir citer.tcl]]

@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8"/>
+<meta content="mkdoc" name="generator"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="Tcl application and package dealing with bibtex references." name="title"/>
 <meta content="Detlef Groth, University of Potsdam, Germany" name="author"/>
 <title>Tcl application and package dealing with bibtex references.</title>
-<link href="data:text/css,%20%20%20%20html%20%7B%0A%20%20%20%20%20%20%20%20overflow-y%3A%20scroll%3B%0A%20%20%20%20%7D%0A%20%20%20%20body%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23444%3B%0A%20%20%20%20%20%20%20%20font-family%3A%20Georgia%2C%20Palatino%2C%20%27Palatino%20Linotype%27%2C%20Times%2C%20%27Times%20New%20Roman%27%2C%20serif%3B%0A%20%20%20%20%20%20%20%20line-height%3A%201.2%3B%0A%20%20%20%20%20%20%20%20padding%3A%201em%3B%0A%20%20%20%20%20%20%20%20margin%3A%20auto%3B%0A%20%20%20%20%20%20%20%20max-width%3A%20%201100px%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%230645ad%3B%0A%20%20%20%20%20%20%20%20text-decoration%3A%20none%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Avisited%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%230b0080%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Ahover%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%2306e%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Aactive%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23faa700%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Afocus%20%7B%0A%20%20%20%20%20%20%20%20outline%3A%20thin%20dotted%3B%0A%20%20%20%20%7D%0A%20%20%20%20p%20%7B%0A%20%20%20%20%20%20%20%20margin%3A%200.5em%200%3B%0A%20%20%20%20%7D%0A%20%20%20%20p.date%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20img%20%7B%0A%20%20%20%20%20%20%20%20max-width%3A%20100%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20h1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20h6%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23111%3B%0A%20%20%20%20%20%20%20%20line-height%3A%20115%25%3B%0A%20%20%20%20%20%20%20%20margin-top%3A%201em%3B%0A%20%20%20%20%20%20%20%20font-weight%3A%20normal%3B%0A%20%20%20%20%7D%0A%20%20%20%20h2.date%2C%20h2.author%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20%20%20font-size%3A%20110%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20h1%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20%20%20font-size%3A%20130%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20p.author%2C%20p.date%20%7B%0A%20%20%20%20%20%20%20%20font-size%3A%20110%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A/%2A%20%20%20%20h2%20%7B%0A%20%20%20%20%20%20%20%20text-transform%3A%20uppercase%3B%0A%20%20%20%20%7D%0A%20%20%20%20%2A/%0A%20%20%20%20pre%2C%20blockquote%20pre%20%7B%0A%20%20%20%20%20%20%20%20border-top%3A%200.1em%20%239ac%20solid%3B%0A%20%20%20%20%20%20%20%20background%3A%20%23e9f6ff%3B%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%200.1em%20%239ac%20solid%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20blockquote%20%7B%0A%20%20%20%20%20%20%20%20margin%3A%200%3B%0A%20%20%20%20%20%20%20%20padding-left%3A%203em%3B%20%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20hr%20%7B%0A%20%20%20%20%20%20%20%20display%3A%20block%3B%0A%20%20%20%20%20%20%20%20height%3A%202px%3B%0A%20%20%20%20%20%20%20%20border%3A%200%3B%0A%20%20%20%20%20%20%20%20border-top%3A%201px%20solid%20%23aaa%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%201px%20solid%20%23eee%3B%0A%20%20%20%20%20%20%20%20margin%3A%201em%200%3B%0A%20%20%20%20%20%20%20%20padding%3A%200%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20pre%2C%20code%2C%20kbd%2C%20samp%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23000%3B%0A%20%20%20%20%20%20%20%20font-family%3A%20Monaco%2C%20%27courier%20new%27%2C%20monospace%3B%0A%20%20%20%20%20%20%20%20font-size%3A%2090%25%3B%20%0A%20%20%20%20%7D%0A%20%20%20%20code.r%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23770000%3B%0A%20%20%20%20%7D%0A%20%20%20%20pre%20%7B%0A%20%20%20%20%20%20%20%20white-space%3A%20pre%3B%0A%20%20%20%20%20%20%20%20white-space%3A%20pre-wrap%3B%0A%20%20%20%20%20%20%20%20word-wrap%3A%20break-word%3B%0A%20%20%20%20%7D%0A%20%20%20%20/%2A%20fix%2C%20do%20not%20like%20bold%20for%20every%20keyword%20%2A/%0A%20%20%20%20code%20span.kw%20%7B%20color%3A%20%23007020%3B%20font-weight%3A%20normal%3B%20%7D%20/%2A%20Keyword%20%2A/%0A%20%20%20%20%20pre.sourceCode%2C%20pre.cmd%20%7B%0A%20%20%20%20%20%20%20%20background%3A%20%23fff6f6%3B%0A%20%20%20%20%7D%0A%20%20%20%20pre.cmdout%20%7B%0A%20%20%20%20%20%20%20%20background%3A%20%23fffff6%3B%0A%20%20%20%20%7D%0A%20%20%20%20figure%2C%20p.author%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20%7B%20%20%20%20%0A%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%202px%20solid%3B%0A%20%20%20%20%20%20%20%20border-spacing%3A%205px%3B%0A%20%20%20%20%20%20%20%20min-width%3A%20400px%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20thead%20tr%20th%20%7B%20%0A%20%20%20%20%20%20%20%20background-color%3A%20%23fde9d9%3B%0A%20%20%20%20%20%20%20%20text-align%3A%20left%3B%20%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20border-top%3A%202px%20solid%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%202px%20solid%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20td%20%7B%20%0A%20%20%20%20%20%20%20%20background-color%3A%20%23fff9e9%3B%0A%0A%20%20%20%20%20%20%20%20text-align%3A%20left%3B%20%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%7D%0A" rel="stylesheet"/><!--URL:mini.css-->
+<link href="data:text/css,%20%20%20%20html%20%7B%0A%20%20%20%20%20%20%20%20overflow-y%3A%20scroll%3B%0A%20%20%20%20%7D%0A%20%20%20%20body%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23444%3B%0A%20%20%20%20%20%20%20%20font-family%3A%20Georgia%2C%20Palatino%2C%20%27Palatino%20Linotype%27%2C%20Times%2C%20%27Times%20New%20Roman%27%2C%20serif%3B%0A%20%20%20%20%20%20%20%20line-height%3A%201.2%3B%0A%20%20%20%20%20%20%20%20padding%3A%201em%3B%0A%20%20%20%20%20%20%20%20margin%3A%20auto%3B%0A%20%20%20%20%20%20%20%20max-width%3A%20%201100px%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%230645ad%3B%0A%20%20%20%20%20%20%20%20text-decoration%3A%20none%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Avisited%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%230b0080%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Ahover%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%2306e%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Aactive%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23faa700%3B%0A%20%20%20%20%7D%0A%20%20%20%20a%3Afocus%20%7B%0A%20%20%20%20%20%20%20%20outline%3A%20thin%20dotted%3B%0A%20%20%20%20%7D%0A%20%20%20%20p%20%7B%0A%20%20%20%20%20%20%20%20margin%3A%200.5em%200%3B%0A%20%20%20%20%7D%0A%20%20%20%20p.date%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20img%20%7B%0A%20%20%20%20%20%20%20%20max-width%3A%20100%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20h1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20h6%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23111%3B%0A%20%20%20%20%20%20%20%20line-height%3A%20115%25%3B%0A%20%20%20%20%20%20%20%20margin-top%3A%201em%3B%0A%20%20%20%20%20%20%20%20font-weight%3A%20normal%3B%0A%20%20%20%20%7D%0A%20%20%20%20h2.date%2C%20h2.author%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20%20%20font-size%3A%20110%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20h1%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20%20%20font-size%3A%20130%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20p.author%2C%20p.date%20%7B%0A%20%20%20%20%20%20%20%20font-size%3A%20110%25%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A/%2A%20%20%20%20h2%20%7B%0A%20%20%20%20%20%20%20%20text-transform%3A%20uppercase%3B%0A%20%20%20%20%7D%0A%20%20%20%20%2A/%0A%20%20%20%20pre%2C%20blockquote%20pre%20%7B%0A%20%20%20%20%20%20%20%20border-top%3A%200.1em%20%239ac%20solid%3B%0A%20%20%20%20%20%20%20%20background%3A%20%23e9f6ff%3B%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%200.1em%20%239ac%20solid%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20blockquote%20%7B%0A%20%20%20%20%20%20%20%20margin%3A%200%3B%0A%20%20%20%20%20%20%20%20padding-left%3A%203em%3B%20%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20hr%20%7B%0A%20%20%20%20%20%20%20%20display%3A%20block%3B%0A%20%20%20%20%20%20%20%20height%3A%202px%3B%0A%20%20%20%20%20%20%20%20border%3A%200%3B%0A%20%20%20%20%20%20%20%20border-top%3A%201px%20solid%20%23aaa%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%201px%20solid%20%23eee%3B%0A%20%20%20%20%20%20%20%20margin%3A%201em%200%3B%0A%20%20%20%20%20%20%20%20padding%3A%200%3B%0A%20%20%20%20%7D%0A%20%20%20%20%0A%20%20%20%20pre%2C%20code%2C%20kbd%2C%20samp%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23000%3B%0A%20%20%20%20%20%20%20%20font-family%3A%20Monaco%2C%20%27courier%20new%27%2C%20monospace%3B%0A%20%20%20%20%20%20%20%20font-size%3A%2090%25%3B%20%0A%20%20%20%20%7D%0A%20%20%20%20code.r%20%7B%0A%20%20%20%20%20%20%20%20color%3A%20%23770000%3B%0A%20%20%20%20%7D%0A%20%20%20%20pre%20%7B%0A%20%20%20%20%20%20%20%20white-space%3A%20pre%3B%0A%20%20%20%20%20%20%20%20white-space%3A%20pre-wrap%3B%0A%20%20%20%20%20%20%20%20word-wrap%3A%20break-word%3B%0A%20%20%20%20%7D%0A%20%20%20%20/%2A%20fix%2C%20do%20not%20like%20bold%20for%20every%20keyword%20%2A/%0A%20%20%20%20code%20span.kw%20%7B%20color%3A%20%23007020%3B%20font-weight%3A%20normal%3B%20%7D%20/%2A%20Keyword%20%2A/%0A%20%20%20%20%20pre.sourceCode%2C%20pre.cmd%20%7B%0A%20%20%20%20%20%20%20%20background%3A%20%23fff6f6%3B%0A%20%20%20%20%7D%0A%20%20%20%20pre.cmdout%20%7B%0A%20%20%20%20%20%20%20%20background%3A%20%23fffff6%3B%0A%20%20%20%20%7D%0A%20%20%20%20figure%2C%20p.author%20%7B%0A%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20%7B%20%20%20%20%0A%20%20%20%20%20%20%20%20border-collapse%3A%20collapse%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%202px%20solid%3B%0A%20%20%20%20%20%20%20%20border-spacing%3A%205px%3B%0A%20%20%20%20%20%20%20%20min-width%3A%20400px%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20thead%20tr%20th%20%7B%20%0A%20%20%20%20%20%20%20%20background-color%3A%20%23fde9d9%3B%0A%20%20%20%20%20%20%20%20text-align%3A%20left%3B%20%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20border-top%3A%202px%20solid%3B%0A%20%20%20%20%20%20%20%20border-bottom%3A%202px%20solid%3B%0A%20%20%20%20%7D%0A%20%20%20%20table%20td%20%7B%20%0A%20%20%20%20%20%20%20%20background-color%3A%20%23fff9e9%3B%0A%0A%20%20%20%20%20%20%20%20text-align%3A%20left%3B%20%0A%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%7D%0A" rel="stylesheet" type="text/css"/><!--URL:mini.css-->
 </head>
 <body>
 <h1 class="title">Tcl application and package dealing with bibtex references.</h1>
 <h2 class="author">Detlef Groth, University of Potsdam, Germany</h2>
-<h2 class="date">2024-11-25</h2>
+<h2 class="date">2025-09-30</h2>
 <h2>NAME</h2>
 <p><em>citer.tcl</em> - application and Tcl package to display Bibtex referencess</p>
 <h2>SYNOPSIS - CLI</h2>
@@ -36,7 +38,9 @@ citer::style INLINE BIBLIO</code></pre>
 </blockquote>
 <p><strong>citer::cite</strong> <em>keylist</em></p>
 <blockquote>
-<p>Adds the given keys to the citation list.</p>
+<p>Adds the given keys to the citation list. Keys can be as well
+  given as a single string separated by , leading @ symbols
+  are automatically stripped of.</p>
 </blockquote>
 <p><strong>citer::getKeys</strong> <em>BIBTEXFILE</em></p>
 <blockquote>
@@ -56,12 +60,12 @@ citer::style INLINE BIBLIO</code></pre>
 <li><em>-book FORMATSTRING</em>
 </li></ul>
 <p>Example:</p>
-<pre class="code"><code class="tclinn">citer::refstyle \
+<pre class="code tclinn"><code class="tclinn">citer::refstyle \
   -article "{author} ({year}). {title}. _{journal}_ {volume}: {pages}" \
   -incollection "{author} ({year}). {title}. In: _{booktitle}_, {publisher}. {volume}: {pages}." \
   -default "{author} ({year}). {title}. {publisher}." 
 citer::getReference assets/literature.bib Groth2013</code></pre>
-<pre class="code"><code class="tclout">Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.</code></pre>
+<pre class="code tclout"><code class="tclout">Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.</code></pre>
 </blockquote>
 <p><strong>citer::reset</strong> inline biblio</p>
 <blockquote>
@@ -77,9 +81,10 @@ citer::getReference assets/literature.bib Groth2013</code></pre>
 </blockquote>
 <h2>EXAMPLES</h2>
 <p>First an example on how to use this package directly within Tcl applications.</p>
-<pre class="code"><code class="tclinn">citer::bibliography assets/literature.bib
+<pre class="code tclinn"><code class="tclinn">citer::bibliography assets/literature.bib
 citer::cite Groth2013
 citer::cite Sievers2011
+citer::cite @Sievers2011,Yachdav2016
 citer::cite wiki:blast
 puts "####### Tcllist like ###########"
 foreach item [citer::bibliography tcl] {
@@ -90,17 +95,19 @@ foreach item [citer::bibliography] {
    puts "* __[lindex $item 0]__ - [lindex $item 1]"
 }
 citer::reset ;# remove all keys from citation list</code></pre>
-<pre class="code"><code class="tclout">####### Tcllist like ###########
+<pre class="code tclout"><code class="tclout">####### Tcllist like ###########
 Groth2013 ---- Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.
 Sievers2011 ---- Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. _Mol. Syst. Biol._ 7: 539
+Yachdav2016 ---- Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. _Bioinformatics_ 32: 3501
 wiki:blast ---- Wikipedia --- BLAST (biotechnology) (2020). Wikipedia, The Free Encyclopedia. https://en.wikipedia.org/wiki/BLAST_(biotechnology) [Online; accessed 02-May-2020]
 ####### Markdown like ###########
 * __Groth2013__ - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: _Computational Toxicology_, Humana Press. 930: 527-547.
 * __Sievers2011__ - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. _Mol. Syst. Biol._ 7: 539
+* __Yachdav2016__ - Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. _Bioinformatics_ 32: 3501
 * __wiki:blast__ - Wikipedia --- BLAST (biotechnology) (2020). Wikipedia, The Free Encyclopedia. https://en.wikipedia.org/wiki/BLAST_(biotechnology) [Online; accessed 02-May-2020]</code></pre><p>Now an example with inline text:</p>
 <p>Here an example with a few citations. The package should be usually used within
 Markdown documents processed with the <a href="https://github.com/pantcl">pantcl</a> document processor.</p>
-<pre class="code"><code class="tclinn">citer::style numeric APA</code></pre>
+<pre class="code tclinn"><code class="tclinn">citer::style numeric APA</code></pre>
 <p>Here some example input:</p>
 <pre class="code"><code>This filter as well supports basic reference management using Bibtex files.
 Citations should be embedded like this: `tcl citer::cite Sievers2011` where 
@@ -134,7 +141,7 @@ Sievers et. al [1].</p>
 <p>Let's now check non existing citations like [6] or using
 the at syntax like [6].</p>
 <p>The citations list can be then finally displayed like this:</p>
-<pre class="code"><code class="tclinn">bibliography assets/literature.bib</code></pre><ul>
+<pre class="code tclinn"><code class="tclinn">bibliography assets/literature.bib</code></pre><ul>
 <li><strong>[1]</strong> - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. <em>Mol. Syst. Biol.</em> 7: 539</li>
 <li><strong>[2]</strong> - Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. <em>Bioinformatics</em> 32: 3501</li>
 <li><strong>[3]</strong> - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: <em>Computational Toxicology</em>, Humana Press. 930: 527-547.</li>
@@ -147,7 +154,7 @@ the at syntax like [6].</p>
 <p>There is currently only an other style available, 'abbrev':
 to use the style within the same document we have to call the bibstyle
 command again.</p>
-<pre class="code"><code class="tclinn">bibstyle abbrev</code></pre>
+<pre class="code tclinn"><code class="tclinn">bibstyle abbrev</code></pre>
 <p>Let's now write just the same text again.
 This filter as well supports basic reference management using Bibtex files.
 Citations should be embedded like this: [Sievers2011] where <em>Sievers2011</em> is a
@@ -157,7 +164,7 @@ And here is a PCA article from my self [Groth2013].</p>
 So let's cite Sivers2011 [Sievers2011] again which should produce
 again a number 1 citation.</p>
 <p>The citations list can be then finally displayed like this:</p>
-<pre class="code"><code class="tclinn">bibliography assets/literature.bib</code></pre><ul>
+<pre class="code tclinn"><code class="tclinn">bibliography assets/literature.bib</code></pre><ul>
 <li><strong>[Dummy2525]</strong> - Error: Dummy2525 - reference not found!</li>
 <li><strong>[Groth2013]</strong> - Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: <em>Computational Toxicology</em>, Humana Press. 930: 527-547.</li>
 <li><strong>[Sievers2011]</strong> - Sievers, F., Wilm, A., Dineen, D., Gibson, T. J., Karplus, K., Li, W., Lopez, R., McWilliam, H., Remmert, M., Soding, J., Thompson, J. D., Higgins, D. G. (2011). Fast, scalable generation of high-quality protein multiple sequence alignments using Clustal Omega. <em>Mol. Syst. Biol.</em> 7: 539</li>
@@ -204,4 +211,4 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</code></pre>
 </body>
-</html><!--Generated by HTMLArk 2024-11-25 17:48:29.200228. Original URL citer.html-->
+</html><!--Generated by HTMLArk 2025-09-30 08:40:46.805959. Original URL citer.html-->

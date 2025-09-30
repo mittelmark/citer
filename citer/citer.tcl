@@ -2,7 +2,7 @@
 #' ---
 #' title: Tcl application and package dealing with bibtex references.
 #' author: Detlef Groth, University of Potsdam, Germany
-#' date: 2024-11-25
+#' date: 2025-09-30
 #' tcl:
 #'     eval: 1
 #' bibliography: assets/literature.bib
@@ -15,10 +15,10 @@
 #  History       : 2023-05-25: initial version
 #                  2023-05-26: first functional version created with aid of ChatGPT
 #                  2024-11-25: Documentation updates, some tests
-#	
+#	           2025-09-30: Multipl keys with add and comma separated
 ##############################################################################
 #
-#  Copyright (c) 2023-2024 Dr. Detlef Groth.
+#  Copyright (c) 2023-2025 Dr. Detlef Groth, University of Potsdam, Germany
 # 
 #  License:      BSD 3
 # 
@@ -54,7 +54,7 @@
 
 package require Tcl
 package require bibtex
-package provide citer 0.1.1
+package provide citer 0.2.0
 
 namespace eval citer {
     variable style 
@@ -126,13 +126,20 @@ namespace eval citer {
     }
     #' **citer::cite** *keylist*
     #' 
-    #' > Adds the given keys to the citation list.
+    #' > Adds the given keys to the citation list. Keys can be as well
+    #'   given as a single string separated by , leading @ symbols
+    #'   are automatically stripped of.
+    #' 
     #' 
     proc cite {keys} {
         variable cites 
         variable style
         set res [list]
         set idxs [list]
+        set keys [regsub -all @ $keys ""]
+        if {[regexp {,} $keys]} {
+            set keys [split $keys ,]
+        }
         foreach key $keys {
             set idx [lsearch $cites $key]
             if {$idx == -1} {
@@ -293,6 +300,7 @@ namespace eval citer {
 #' citer::bibliography assets/literature.bib
 #' citer::cite Groth2013
 #' citer::cite Sievers2011
+#' citer::cite @Sievers2011,Yachdav2016
 #' citer::cite wiki:blast
 #' puts "####### Tcllist like ###########"
 #' foreach item [citer::bibliography tcl] {
@@ -424,7 +432,7 @@ if {[info exists argv0] && $argv0 eq [info script] && [regexp citer $argv0]} {
                 Check package version
             } -body {
                 package present citer
-            } -result {0.1.1}
+            } -result {0.2.0}
             tcltest::test cite-1.1 {
                 Calling cite with an existing key.
             } -body {
@@ -451,6 +459,16 @@ if {[info exists argv0] && $argv0 eq [info script] && [regexp citer $argv0]} {
             } -body {
                 lindex [citer::bibliography tcl] 1
             } -result {Groth2013 {Groth, D., Hartmann, S., Klie, S., Selbig, J. (2013). Principal Components Analysis. In: Computational Toxicology, Humana Press. 930: 527-547.}}
+            tcltest::test biblio-1.3 {
+                Retrieving multiple keys with @ prefix
+            } -body {
+                citer::cite @Sievers2011,@Yachdav2016
+            } -result {[Sievers2011,Yachdav2016]}
+            tcltest::test biblio-1.4 {
+                Retrieving second item
+            } -body {
+                lindex [citer::bibliography tcl] 3
+            } -result {Yachdav2016 {Yachdav, G., Wilzbach, S., Rauscher, B., Sheridan, R., Sillitoe, I., Procter, J., Lewis, Suzanna E., Rost, B., Goldberg, T. (2016). MSAViewer: interactive JavaScript visualization of multiple sequence alignments. Bioinformatics 32: 3501.}}
             tcltest::cleanupTests
             catch { destroy . }
         } else {
@@ -484,7 +502,7 @@ if {[info exists argv0] && $argv0 eq [info script] && [regexp citer $argv0]} {
 #' ```
 #' BSD 3-Clause License
 #'
-#' Copyright (c) 2023-2024, Detlef Groth, University of Potsdam
+#' Copyright (c) 2023-2025, Detlef Groth, University of Potsdam
 #' 
 #' Redistribution and use in source and binary forms, with or without
 #' modification, are permitted provided that the following conditions are met:
